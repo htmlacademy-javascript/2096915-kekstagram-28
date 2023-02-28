@@ -1,3 +1,11 @@
+const SIMILAR_PHOTO_COUNT = 25;
+const MIN_LIKE_COUNT = 15;
+const MAX_LIKE_COUNT = 200;
+const AVATAR_COUNT = 6;
+const MIN_COMMENT_ID = 1;
+const MAX_COMMENT_ID = 500;
+const COMMENT_COUNT = 3;
+
 const PHOTOS_DESCRIPTIONS = [
   'Здесь я лежу и кайфую на пляже',
   'Иду в магазин за пивком',
@@ -20,20 +28,7 @@ const COMMENTATORS_MESSAGES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-const COMMENTATORS_NAMES = [
-  'Артём',
-  'Роман',
-  'Виталий',
-  'Анастасия',
-  'Владислав',
-  'Виктор',
-  'Кристина',
-  'Мария',
-  'Дмитрий',
-  'Кирилл'
-];
-
-const SIMILAR_PHOTO_COUNT = 25;
+const COMMENTATORS_NAMES = ['Артём', 'Роман', 'Виталий', 'Анастасия', 'Владислав', 'Виктор', 'Кристина', 'Мария', 'Дмитрий', 'Кирилл'];
 
 const createIdGenerator = (start) => () => start++;
 
@@ -66,12 +61,14 @@ const createRandomIdFromRangeGenerator = (min, max) => {
   };
 };
 
-const generateCommentId = createRandomIdFromRangeGenerator(1, 300);
+const generateCommentId = createRandomIdFromRangeGenerator(MIN_COMMENT_ID, MAX_COMMENT_ID);
+
+const createMessage = () => Array.from({length: getRandomInteger(1, 2)}, () => getRandomArrayElement(COMMENTATORS_MESSAGES)).join(' ');
 
 const createCommentByPhoto = () => ({
   id: generateCommentId(),
-  avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
-  message: getRandomArrayElement(COMMENTATORS_MESSAGES),
+  avatar: `img/avatar-${getRandomInteger(1, AVATAR_COUNT)}.svg`,
+  message: createMessage(),
   name: getRandomArrayElement(COMMENTATORS_NAMES)
 });
 
@@ -79,8 +76,8 @@ const createDescriptionPhoto = () => ({
   id: generatePhotoId(),
   url: `photos/${generatePhotoUrl()}.jpg`,
   description: getRandomArrayElement(PHOTOS_DESCRIPTIONS),
-  likes: getRandomInteger(15, 200),
-  comments: Array.from({length: getRandomInteger(1, 3)}, createCommentByPhoto)
+  likes: getRandomInteger(MIN_LIKE_COUNT, MAX_LIKE_COUNT),
+  comments: Array.from({length: getRandomInteger(0, COMMENT_COUNT)}, createCommentByPhoto)
 });
 
 const createSimilarDescriptionPhoto = () => Array.from({length: SIMILAR_PHOTO_COUNT}, createDescriptionPhoto);
