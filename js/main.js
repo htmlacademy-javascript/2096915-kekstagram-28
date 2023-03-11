@@ -1,3 +1,6 @@
 import {createSimilarDescriptionPhoto} from './data.js';
+import {renderPhoto} from './thumbnail.js';
 
-createSimilarDescriptionPhoto();
+const photos = createSimilarDescriptionPhoto();
+
+renderPhoto(photos);
