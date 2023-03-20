@@ -1,5 +1,5 @@
 import { renderComment } from './comment-list.js';
-import { isEscapeKey } from './util.js';
+import { onDocumentKeydown, closeBigPicture, clearCommentList } from './utils/modal-util.js';
 
 const photoModalElement = document.querySelector('.big-picture');
 const bigPicturePhoto = photoModalElement.querySelector('.big-picture__img');
@@ -13,21 +13,8 @@ const getPhotoData = (photo) => {
   bigPictureSocial.querySelector('.social__caption').textContent = description;
   bigPictureSocial.querySelector('.likes-count').textContent = likes;
   bigPictureSocial.querySelector('.comments-count').textContent = comments.length;
-  bigPictureSocial.querySelector('.social__comments').innerHTML = '';
+  clearCommentList();
 };
-
-const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeBigPicture();
-  }
-};
-
-function closeBigPicture() {
-  photoModalElement.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
-}
 
 const openModalBigPicture = (thumbnail, photo) => {
   thumbnail.addEventListener('click', (evt) => {
