@@ -1,4 +1,4 @@
-import { openModalBigPicture, closeModalBigPicture } from './photo-modal.js';
+import { openBigPicture } from './photo-modal.js';
 
 const photoListElement = document.querySelector('.pictures');
 const photoTemplate = document.querySelector('#picture')
@@ -16,8 +16,7 @@ const renderPhoto = (photo) => {
     photoElement.querySelector('.picture__likes').textContent = likes;
     photoElement.querySelector('.picture__comments').textContent = comments.length;
     photoListFragment.append(photoElement);
-    openModalBigPicture(photoElement, element);
-    closeModalBigPicture();
+    openBigPicture(photoElement, element);
   });
   photoListElement.append(photoListFragment);
 };

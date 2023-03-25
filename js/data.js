@@ -1,4 +1,4 @@
-import { getRandomInteger, getRandomArrayElement, createRandomIdFromRangeGenerator } from './utils/util.js';
+import { getRandomInteger, getRandomArrayElement, createRandomIdFromRangeGenerator } from './util.js';
 
 const SIMILAR_PHOTO_COUNT = 25;
 const MIN_LIKE_COUNT = 15;
@@ -6,7 +6,7 @@ const MAX_LIKE_COUNT = 200;
 const AVATAR_COUNT = 6;
 const MIN_COMMENT_ID = 1;
 const MAX_COMMENT_ID = 500;
-const COMMENT_COUNT = 3;
+const COMMENT_COUNT = 15;
 
 const PHOTOS_DESCRIPTIONS = [
   'Здесь я лежу и кайфую на пляже',
@@ -48,7 +48,7 @@ const createDescriptionPhoto = (index) => ({
   url: `photos/${index}.jpg`,
   description: getRandomArrayElement(PHOTOS_DESCRIPTIONS),
   likes: getRandomInteger(MIN_LIKE_COUNT, MAX_LIKE_COUNT),
-  comments: Array.from({ length: getRandomInteger(0, COMMENT_COUNT) }, createCommentByPhoto)
+  comments: Array.from({ length: getRandomInteger(1, COMMENT_COUNT) }, createCommentByPhoto)
 });
 
 const createSimilarDescriptionPhoto = () => Array.from({ length: SIMILAR_PHOTO_COUNT }, (_, index) => createDescriptionPhoto(index + 1));
