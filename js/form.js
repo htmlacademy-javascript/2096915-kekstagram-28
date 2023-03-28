@@ -53,7 +53,6 @@ const isValidLengthHashtag = (hashtags) => hashtags.length <= MAX_HASHTAG_COUNT;
 
 const isUniqueHashtag = (hashtags) => {
   const lowerCaseHashtags = hashtags.map((hashtag) => hashtag.toLowerCase());
-  // return lowerCaseHashtags.length === new Set(lowerCaseHashtags).size;
   const uniqHashtag = [];
   for (let i = 0; i < lowerCaseHashtags.length; i++) {
     if (uniqHashtag.includes(lowerCaseHashtags[i])) {
@@ -67,7 +66,6 @@ const isUniqueHashtag = (hashtags) => {
 
 const validateHashtag = (value) => {
   const hashtags = value
-    .trim()
     .split(' ')
     .filter((hashtag) => hashtag.trim().length);
   return hashtags.every(isValidHashtag) && isValidLengthHashtag(hashtags) && isUniqueHashtag(hashtags);
