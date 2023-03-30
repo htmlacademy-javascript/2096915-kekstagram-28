@@ -1,5 +1,6 @@
 import { isEscapeKey } from './util.js';
 import { resetScale } from './scale-picture.js';
+import { resetEffects } from './effect-picture.js';
 
 const HASHTAG_REGEXP = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAG_COUNT = 5;
@@ -39,6 +40,7 @@ const openImgUploadForm = () => {
   document.addEventListener('keydown', onDocumentKeydown);
   imgUploadCancel.addEventListener('click', onClickcloseUploadOverlay);
   resetScale();
+  resetEffects();
 };
 
 imgUploadFile.addEventListener('change', openImgUploadForm);
