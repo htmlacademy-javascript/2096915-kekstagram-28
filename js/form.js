@@ -42,19 +42,11 @@ const onClickcloseUploadOverlay = (evt) => {
   closeUploadOverlay();
 };
 
-const addOnDocumentKeydown = () => {
-  document.addEventListener('keydown', onDocumentKeydown);
-};
-
-const removeOnDocumentKeydown = () => {
-  document.removeEventListener('keydown', onDocumentKeydown);
-};
-
 function closeUploadOverlay() {
   imgUploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   imgUploadCancel.removeEventListener('click', onClickcloseUploadOverlay);
-  removeOnDocumentKeydown();
+  document.removeEventListener('keydown', onDocumentKeydown);
   resetScale();
   resetEffects();
   imgUploadForm.reset();
@@ -64,7 +56,7 @@ const openImgUploadForm = () => {
   imgUploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   imgUploadCancel.addEventListener('click', onClickcloseUploadOverlay);
-  addOnDocumentKeydown();
+  document.addEventListener('keydown', onDocumentKeydown);
 };
 
 imgUploadFile.addEventListener('change', openImgUploadForm);
@@ -132,21 +124,21 @@ const removeModalMessage = () => {
 
 const onClickCloseModalMessage = () => {
   removeModalMessage();
-  addOnDocumentKeydown();
+  document.addEventListener('keydown', onDocumentKeydown);
 };
 
 const onModalMessageKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     removeModalMessage();
-    addOnDocumentKeydown();
+    document.addEventListener('keydown', onDocumentKeydown);
   }
 };
 
 const onClickBodyCloseModalMessage = (evt) => {
   if (evt.target.matches('.success') || evt.target.matches('.error')) {
     removeModalMessage();
-    addOnDocumentKeydown();
+    document.addEventListener('keydown', onDocumentKeydown);
   }
 };
 
@@ -164,7 +156,7 @@ const showSuccesModalMessage = () => {
 const showErrorModalMessage = () => {
   showModalMessage(errorElement);
   closeModalMessage(errorButtonElement);
-  removeOnDocumentKeydown();
+  document.removeEventListener('keydown', onDocumentKeydown);
 };
 
 const setUserFormSubmit = (onSucces) => {
