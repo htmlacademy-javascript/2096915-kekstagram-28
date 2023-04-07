@@ -1,3 +1,5 @@
+const ALERT_SHOW_TIME = 5000;
+
 const getRandomInteger = (min, max) => {
   const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
   const upper = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
@@ -26,4 +28,25 @@ const createRandomIdFromRangeGenerator = (min, max) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomInteger, getRandomArrayElement, createRandomIdFromRangeGenerator, isEscapeKey};
+const showAlert = (message) => {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = '100';
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = '20%';
+  alertContainer.style.top = '0';
+  alertContainer.style.right = '20%';
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '20px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'rgb(204 1 37)';
+
+  alertContainer.textContent = message;
+
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
+};
+
+export {getRandomInteger, getRandomArrayElement, createRandomIdFromRangeGenerator, isEscapeKey, showAlert};
