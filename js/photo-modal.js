@@ -65,7 +65,7 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
-const onClickcloseBigPicture = (evt) => {
+const onClickCloseBigPicture = (evt) => {
   evt.preventDefault();
   closeBigPicture();
   clearCommentsLoaderButton();
@@ -74,7 +74,7 @@ const onClickcloseBigPicture = (evt) => {
 function closeBigPicture() {
   document.querySelector('.big-picture').classList.add('hidden');
   document.body.classList.remove('modal-open');
-  photoModalCloseElement.removeEventListener('click', onClickcloseBigPicture);
+  photoModalCloseElement.removeEventListener('click', onClickCloseBigPicture);
   document.removeEventListener('keydown', onDocumentKeydown);
   clearCommentsList();
 }
@@ -105,7 +105,7 @@ const openBigPicture = (thumbnail, photo) => {
     showComment(photo);
     loadComment();
     document.addEventListener('keydown', onDocumentKeydown);
-    photoModalCloseElement.addEventListener('click', onClickcloseBigPicture);
+    photoModalCloseElement.addEventListener('click', onClickCloseBigPicture);
   });
 };
 

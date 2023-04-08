@@ -70,6 +70,12 @@ noUiSlider.create(slider, {
 
 const isDefault = () => chosenEffect === EFFECT_DEFAULT;
 
+const showSliderContainer = () => sliderContainer.classList.remove('hidden');
+
+const hideSliderContainer = () => sliderContainer.classList.add('hidden');
+
+hideSliderContainer();
+
 const updateSlider = () => {
   slider.noUiSlider.updateOptions({
     range: {
@@ -81,9 +87,9 @@ const updateSlider = () => {
   });
 
   if (isDefault()) {
-    sliderContainer.classList.add('hidden');
+    hideSliderContainer();
   } else {
-    sliderContainer.classList.remove('hidden');
+    showSliderContainer();
   }
 };
 

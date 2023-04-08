@@ -1,9 +1,16 @@
 import { isEscapeKey } from './util.js';
 import { resetScale } from './scale-picture.js';
 import { resetEffects } from './effect-picture.js';
+import { sendData } from './api.js';
 
 const HASHTAG_REGEXP = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAG_COUNT = 5;
+const MAX_SYMS_COMMENTS = 140;
+
+const SubmitButtonText = {
+  IDLE: 'ОПУБЛИКОВАТЬ',
+  SENDING: 'ОПУБЛИКОВЫВАЮ...'
+};
 
 const imgUploadOverlay = document.querySelector('.img-upload__overlay');
 const imgUploadFile = document.querySelector('#upload-file');
@@ -11,6 +18,15 @@ const imgUploadCancel = document.querySelector('#upload-cancel');
 const imgUploadForm = document.querySelector('.img-upload__form');
 const hashtagField = imgUploadForm.querySelector('.text__hashtags');
 const commentField = imgUploadForm.querySelector('.text__description');
+const submitButton = imgUploadForm.querySelector('.img-upload__submit');
+const successElement = document.querySelector('#success')
+  .content
+  .querySelector('.success');
+const succesButtonElement = successElement.querySelector('.success__button');
+const errorElement = document.querySelector('#error')
+  .content
+  .querySelector('.error');
+const errorButtonElement = errorElement.querySelector('.error__button');
 
 const isInFocusField = () => document.activeElement === hashtagField || document.activeElement === commentField;
 
@@ -29,18 +45,18 @@ const onClickcloseUploadOverlay = (evt) => {
 function closeUploadOverlay() {
   imgUploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeydown);
   imgUploadCancel.removeEventListener('click', onClickcloseUploadOverlay);
+  document.removeEventListener('keydown', onDocumentKeydown);
+  resetScale();
+  resetEffects();
   imgUploadForm.reset();
 }
 
 const openImgUploadForm = () => {
   imgUploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  document.addEventListener('keydown', onDocumentKeydown);
   imgUploadCancel.addEventListener('click', onClickcloseUploadOverlay);
-  resetScale();
-  resetEffects();
+  document.addEventListener('keydown', onDocumentKeydown);
 };
 
 imgUploadFile.addEventListener('change', openImgUploadForm);
@@ -81,19 +97,83 @@ pristine.addValidator(
   'Неправильное заполнение поля'
 );
 
-const validateComment = (value) => value.length <= 140;
+const validateComment = (value) => value.length <= MAX_SYMS_COMMENTS;
 
 pristine.addValidator(
   commentField,
   validateComment,
-  'До 140 символов'
+  `До ${MAX_SYMS_COMMENTS} символов`
 );
 
-const onFormSubmit = (evt) => {
-  evt.preventDefault();
-  if (pristine.validate()) {
-    imgUploadForm.submit();
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.SENDING;
+};
+
+const unBlockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.IDLE;
+};
+
+const showModalMessage = (element) => document.body.append(element);
+
+const removeModalMessage = () => {
+  successElement.remove();
+  errorElement.remove();
+};
+
+const onClickCloseModalMessage = () => {
+  removeModalMessage();
+  document.addEventListener('keydown', onDocumentKeydown);
+};
+
+const onModalMessageKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    removeModalMessage();
+    document.addEventListener('keydown', onDocumentKeydown);
   }
 };
 
-imgUploadForm.addEventListener('submit', onFormSubmit);
+const onClickBodyCloseModalMessage = (evt) => {
+  if (evt.target.matches('.success') || evt.target.matches('.error')) {
+    removeModalMessage();
+    document.addEventListener('keydown', onDocumentKeydown);
+  }
+};
+
+const closeModalMessage = (element) => {
+  element.addEventListener('click', onClickCloseModalMessage);
+  document.addEventListener('keydown', onModalMessageKeydown);
+  document.addEventListener('click', onClickBodyCloseModalMessage);
+};
+
+const showSuccesModalMessage = () => {
+  showModalMessage(successElement);
+  closeModalMessage(succesButtonElement);
+};
+
+const showErrorModalMessage = () => {
+  showModalMessage(errorElement);
+  closeModalMessage(errorButtonElement);
+  document.removeEventListener('keydown', onDocumentKeydown);
+};
+
+const setUserFormSubmit = (onSucces) => {
+  imgUploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      blockSubmitButton();
+      sendData(new FormData(evt.target))
+        .then(onSucces)
+        .then(showSuccesModalMessage)
+        .catch(showErrorModalMessage)
+        .finally(unBlockSubmitButton);
+    }
+  });
+};
+
+const resetForm = () => setUserFormSubmit(closeUploadOverlay);
+
+export { resetForm };
