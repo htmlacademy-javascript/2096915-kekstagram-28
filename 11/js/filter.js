@@ -48,10 +48,10 @@ const switchFilter = (cb) => {
   }
 };
 
-const uploadPictures = (loadedPictures, cb) => {
+const sortPhotos = (loadedPictures, cb) => {
   filterElement.classList.remove('img-filters--inactive');
   pictures = loadedPictures.slice();
   switchFilter(cb);
 };
 
-export { uploadPictures };
+export { sortPhotos };
