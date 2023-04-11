@@ -13,7 +13,7 @@ const showImgScale = (value) => {
   imgUpload.style.transform = `scale(${value / 100})`;
 };
 
-const onClickButtonScaleSmaller = () => {
+const onButtonScaleSmallerClick = () => {
   const scaleValue = parseInt(scaleValueField.value, 10);
   const currentScale = scaleValue - SCALE_STEP;
   if (currentScale < MIN_SCALE) {
@@ -22,7 +22,7 @@ const onClickButtonScaleSmaller = () => {
   showImgScale(currentScale);
 };
 
-const onClickButtonScaleBigger = () => {
+const onButtonScaleBiggerClick = () => {
   const scaleValue = parseInt(scaleValueField.value, 10);
   const currentScale = scaleValue + SCALE_STEP;
   if (currentScale > MAX_SCALE) {
@@ -33,7 +33,7 @@ const onClickButtonScaleBigger = () => {
 
 const resetScale = () => showImgScale(SCALE_DEFAULT);
 
-buttonScaleSmaller.addEventListener('click', onClickButtonScaleSmaller);
-buttonScaleBigger.addEventListener('click', onClickButtonScaleBigger);
+buttonScaleSmaller.addEventListener('click', onButtonScaleSmallerClick);
+buttonScaleBigger.addEventListener('click', onButtonScaleBiggerClick);
 
 export { resetScale };

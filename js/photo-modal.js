@@ -36,7 +36,7 @@ const removeHiddenCommentClass = (element, maxValue) => {
   }
 };
 
-const onCommentsLoaderButton = () => {
+const onCommentsLoaderButtonClick = () => {
   const hiddenComments = document.querySelectorAll('.social__comment.hidden');
   const commentsCount = document.querySelectorAll('.social__comment').length;
   const hiddenCommentsLength = hiddenComments.length;
@@ -53,7 +53,7 @@ const onCommentsLoaderButton = () => {
 };
 
 const clearCommentsLoaderButton = () => {
-  commentLoaderButton.removeEventListener('click', onCommentsLoaderButton);
+  commentLoaderButton.removeEventListener('click', onCommentsLoaderButtonClick);
   commentLoaderButton.classList.remove('hidden');
 };
 
@@ -65,7 +65,7 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
-const onClickCloseBigPicture = (evt) => {
+const onCloseBigPictureClick = (evt) => {
   evt.preventDefault();
   closeBigPicture();
   clearCommentsLoaderButton();
@@ -74,7 +74,7 @@ const onClickCloseBigPicture = (evt) => {
 function closeBigPicture() {
   document.querySelector('.big-picture').classList.add('hidden');
   document.body.classList.remove('modal-open');
-  photoModalCloseElement.removeEventListener('click', onClickCloseBigPicture);
+  photoModalCloseElement.removeEventListener('click', onCloseBigPictureClick);
   document.removeEventListener('keydown', onDocumentKeydown);
   clearCommentsList();
 }
@@ -94,7 +94,7 @@ const showComment = (photo) => {
   }
 };
 
-const loadComment = () => commentLoaderButton.addEventListener('click', onCommentsLoaderButton);
+const loadComment = () => commentLoaderButton.addEventListener('click', onCommentsLoaderButtonClick);
 
 const openBigPicture = (thumbnail, photo) => {
   thumbnail.addEventListener('click', (evt) => {
@@ -105,7 +105,7 @@ const openBigPicture = (thumbnail, photo) => {
     showComment(photo);
     loadComment();
     document.addEventListener('keydown', onDocumentKeydown);
-    photoModalCloseElement.addEventListener('click', onClickCloseBigPicture);
+    photoModalCloseElement.addEventListener('click', onCloseBigPictureClick);
   });
 };
 
