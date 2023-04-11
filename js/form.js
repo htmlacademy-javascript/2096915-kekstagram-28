@@ -37,7 +37,7 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
-const onClickcloseUploadOverlay = (evt) => {
+const onCloseUploadOverlayClick = (evt) => {
   evt.preventDefault();
   closeUploadOverlay();
 };
@@ -45,7 +45,7 @@ const onClickcloseUploadOverlay = (evt) => {
 function closeUploadOverlay() {
   imgUploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  imgUploadCancel.removeEventListener('click', onClickcloseUploadOverlay);
+  imgUploadCancel.removeEventListener('click', onCloseUploadOverlayClick);
   document.removeEventListener('keydown', onDocumentKeydown);
   resetScale();
   resetEffects();
@@ -55,7 +55,7 @@ function closeUploadOverlay() {
 const openImgUploadForm = () => {
   imgUploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  imgUploadCancel.addEventListener('click', onClickcloseUploadOverlay);
+  imgUploadCancel.addEventListener('click', onCloseUploadOverlayClick);
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
@@ -122,7 +122,7 @@ const removeModalMessage = () => {
   errorElement.remove();
 };
 
-const onClickCloseModalMessage = () => {
+const onCloseModalMessageClick = () => {
   removeModalMessage();
   document.addEventListener('keydown', onDocumentKeydown);
 };
@@ -135,7 +135,7 @@ const onModalMessageKeydown = (evt) => {
   }
 };
 
-const onClickBodyCloseModalMessage = (evt) => {
+const onBodyCloseModalMessageClick = (evt) => {
   if (evt.target.matches('.success') || evt.target.matches('.error')) {
     removeModalMessage();
     document.addEventListener('keydown', onDocumentKeydown);
@@ -143,9 +143,9 @@ const onClickBodyCloseModalMessage = (evt) => {
 };
 
 const closeModalMessage = (element) => {
-  element.addEventListener('click', onClickCloseModalMessage);
+  element.addEventListener('click', onCloseModalMessageClick);
   document.addEventListener('keydown', onModalMessageKeydown);
-  document.addEventListener('click', onClickBodyCloseModalMessage);
+  document.addEventListener('click', onBodyCloseModalMessageClick);
 };
 
 const showSuccesModalMessage = () => {
