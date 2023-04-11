@@ -1,14 +1,14 @@
 import { renderComment } from './comment-list.js';
 import { isEscapeKey } from './util.js';
 
+const LOADING_COMMENT = 5;
+
 const photoModalElement = document.querySelector('.big-picture');
 const bigPicturePhoto = photoModalElement.querySelector('.big-picture__img');
 const bigPictureSocial = photoModalElement.querySelector('.big-picture__social');
 const photoModalCloseElement = photoModalElement.querySelector('.big-picture__cancel');
 const socialCommentList = bigPictureSocial.querySelector('.social__comments');
 const commentLoaderButton = bigPictureSocial.querySelector('.comments-loader');
-
-const LOADING_COMMENT = 5;
 
 const clearCommentsList = () => {
   document.querySelector('.social__comments').innerHTML = '';
