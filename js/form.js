@@ -125,6 +125,7 @@ const removeModalMessage = () => {
 const onCloseModalMessageClick = () => {
   removeModalMessage();
   document.addEventListener('keydown', onDocumentKeydown);
+  clearEventListener();
 };
 
 const onModalMessageKeydown = (evt) => {
@@ -132,6 +133,7 @@ const onModalMessageKeydown = (evt) => {
     evt.preventDefault();
     removeModalMessage();
     document.addEventListener('keydown', onDocumentKeydown);
+    clearEventListener();
   }
 };
 
@@ -139,6 +141,7 @@ const onBodyCloseModalMessageClick = (evt) => {
   if (evt.target.matches('.success') || evt.target.matches('.error')) {
     removeModalMessage();
     document.addEventListener('keydown', onDocumentKeydown);
+    clearEventListener();
   }
 };
 
@@ -148,6 +151,12 @@ const closeModalMessage = (element) => {
   document.addEventListener('click', onBodyCloseModalMessageClick);
 };
 
+function clearEventListener () {
+  document.removeEventListener('keydown', onModalMessageKeydown);
+  document.removeEventListener('click', onBodyCloseModalMessageClick);
+  document.removeEventListener('keydown', onDocumentKeydown);
+}
+
 const showSuccesModalMessage = () => {
   showModalMessage(successElement);
   closeModalMessage(succesButtonElement);
@@ -156,7 +165,6 @@ const showSuccesModalMessage = () => {
 const showErrorModalMessage = () => {
   showModalMessage(errorElement);
   closeModalMessage(errorButtonElement);
-  document.removeEventListener('keydown', onDocumentKeydown);
 };
 
 const setUserFormSubmit = (onSucces) => {
