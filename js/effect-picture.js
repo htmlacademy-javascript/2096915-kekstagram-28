@@ -1,62 +1,57 @@
-const EFFECTS_LIST = [
-  {
-    name: 'none',
+const EffectsList = {
+  none: {
     filter: 'none',
     min: 0,
     max: 100,
     step: 1,
     unit: '',
   },
-  {
-    name: 'chrome',
+  chrome: {
     filter: 'grayscale',
     min: 0,
     max: 1,
     step: 0.1,
     unit: '',
   },
-  {
-    name: 'sepia',
+  sepia: {
     filter: 'sepia',
     min: 0,
     max: 1,
     step: 0.1,
     unit: '',
   },
-  {
-    name: 'marvin',
+  marvin: {
     filter: 'invert',
     min: 0,
     max: 100,
     step: 1,
     unit: '%',
   },
-  {
-    name: 'phobos',
+  phobos : {
     filter: 'blur',
     min: 0,
     max: 3,
     step: 0.1,
     unit: 'px',
   },
-  {
-    name: 'heat',
+  heat: {
     filter: 'brightness',
     min: 1,
     max: 3,
     step: 0.1,
     unit: '',
   },
-];
+};
 
-const EFFECT_DEFAULT = EFFECTS_LIST[0];
-let chosenEffect = EFFECT_DEFAULT;
+const EFFECT_DEFAULT = EffectsList.none;
 
 const shownImage = document.querySelector('.img-upload__preview img');
 const effectLevelValue = document.querySelector('.effect-level__value');
 const slider = document.querySelector('.effect-level__slider');
 const sliderContainer = document.querySelector('.img-upload__effect-level');
 const effectsList = document.querySelector('.effects__list');
+
+let chosenEffect = EFFECT_DEFAULT;
 
 noUiSlider.create(slider, {
   range: {
@@ -97,8 +92,9 @@ const onEffectsChange = (evt) => {
   if (!evt.target.classList.contains('effects__radio')) {
     return false;
   }
-  chosenEffect = EFFECTS_LIST.find((effect) => effect.name === evt.target.value);
-  shownImage.className = `effects__preview--${chosenEffect.name}`;
+  const selectedFilter = evt.target.value;
+  chosenEffect = EffectsList[`${selectedFilter}`];
+  shownImage.className = `effects__preview--${selectedFilter}`;
   updateSlider();
 };
 

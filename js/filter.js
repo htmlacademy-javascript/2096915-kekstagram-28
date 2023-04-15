@@ -6,11 +6,11 @@ const Filter = {
   DISCUSSED: 'filter-discussed'
 };
 
-let currentFilter = Filter.DEFAULT;
-let pictures = [];
-
 const filterElement = document.querySelector('.img-filters');
 const filterElementButton = filterElement.querySelectorAll('.img-filters__button');
+
+let currentFilter = Filter.DEFAULT;
+let pictures = [];
 
 const sortRandom = () => Math.random() - 0.5;
 
