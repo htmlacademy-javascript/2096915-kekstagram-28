@@ -12,6 +12,11 @@ const SubmitButtonText = {
   SENDING: 'ОПУБЛИКОВЫВАЮ...'
 };
 
+const ErrorText = {
+  HASHTAG: 'Неправильное заполнение поля',
+  COMMENT: `До ${MAX_SYMS_COMMENTS} символов`
+};
+
 const imgUploadOverlay = document.querySelector('.img-upload__overlay');
 const imgUploadFile = document.querySelector('#upload-file');
 const imgUploadCancel = document.querySelector('#upload-cancel');
@@ -27,6 +32,12 @@ const errorElement = document.querySelector('#error')
   .content
   .querySelector('.error');
 const errorButtonElement = errorElement.querySelector('.error__button');
+
+const pristine = new Pristine(imgUploadForm, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextClass: 'img-upload__field-wrapper__error'
+});
 
 const isInFocusField = () => document.activeElement === hashtagField || document.activeElement === commentField;
 
@@ -50,6 +61,7 @@ function closeUploadOverlay() {
   resetScale();
   resetEffects();
   imgUploadForm.reset();
+  pristine.reset();
 }
 
 const openImgUploadForm = () => {
@@ -61,24 +73,17 @@ const openImgUploadForm = () => {
 
 imgUploadFile.addEventListener('change', openImgUploadForm);
 
-const pristine = new Pristine(imgUploadForm, {
-  classTo: 'img-upload__field-wrapper',
-  errorTextParent: 'img-upload__field-wrapper',
-  errorTextClass: 'img-upload__field-wrapper__error'
-});
-
 const isValidHashtag = (hashtag) => HASHTAG_REGEXP.test(hashtag);
 
 const isValidLengthHashtag = (hashtags) => hashtags.length <= MAX_HASHTAG_COUNT;
 
 const isUniqueHashtag = (hashtags) => {
-  const lowerCaseHashtags = hashtags.map((hashtag) => hashtag.toLowerCase());
   const uniqHashtag = [];
-  for (let i = 0; i < lowerCaseHashtags.length; i++) {
-    if (uniqHashtag.includes(lowerCaseHashtags[i])) {
+  for (let i = 0; i < hashtags.length; i++) {
+    if (uniqHashtag.includes(hashtags[i])) {
       return false;
     } else {
-      uniqHashtag.push(lowerCaseHashtags[i]);
+      uniqHashtag.push(hashtags[i]);
     }
   }
   return true;
@@ -86,6 +91,7 @@ const isUniqueHashtag = (hashtags) => {
 
 const validateHashtag = (value) => {
   const hashtags = value
+    .toLowerCase()
     .split(' ')
     .filter((hashtag) => hashtag.trim().length);
   return hashtags.every(isValidHashtag) && isValidLengthHashtag(hashtags) && isUniqueHashtag(hashtags);
@@ -94,7 +100,7 @@ const validateHashtag = (value) => {
 pristine.addValidator(
   hashtagField,
   validateHashtag,
-  'Неправильное заполнение поля'
+  ErrorText.HASHTAG
 );
 
 const validateComment = (value) => value.length <= MAX_SYMS_COMMENTS;
@@ -102,17 +108,12 @@ const validateComment = (value) => value.length <= MAX_SYMS_COMMENTS;
 pristine.addValidator(
   commentField,
   validateComment,
-  `До ${MAX_SYMS_COMMENTS} символов`
+  ErrorText.COMMENT
 );
 
-const blockSubmitButton = () => {
-  submitButton.disabled = true;
-  submitButton.textContent = SubmitButtonText.SENDING;
-};
-
-const unBlockSubmitButton = () => {
-  submitButton.disabled = false;
-  submitButton.textContent = SubmitButtonText.IDLE;
+const blockSubmitButton = (blockSubmit = false, buttonText = SubmitButtonText.IDLE) => {
+  submitButton.disabled = blockSubmit;
+  submitButton.textContent = buttonText;
 };
 
 const showModalMessage = (element) => document.body.append(element);
@@ -154,7 +155,7 @@ const closeModalMessage = (element) => {
 function clearEventListener () {
   document.removeEventListener('keydown', onModalMessageKeydown);
   document.removeEventListener('click', onBodyCloseModalMessageClick);
-  document.removeEventListener('keydown', onDocumentKeydown);
+  document.removeEventListener('keydown', onBodyCloseModalMessageClick);
 }
 
 const showSuccesModalMessage = () => {
@@ -165,6 +166,7 @@ const showSuccesModalMessage = () => {
 const showErrorModalMessage = () => {
   showModalMessage(errorElement);
   closeModalMessage(errorButtonElement);
+  document.removeEventListener('keydown', onDocumentKeydown);
 };
 
 const setUserFormSubmit = (onSucces) => {
@@ -172,12 +174,12 @@ const setUserFormSubmit = (onSucces) => {
     evt.preventDefault();
     const isValid = pristine.validate();
     if (isValid) {
-      blockSubmitButton();
+      blockSubmitButton(true, SubmitButtonText.SENDING);
       sendData(new FormData(evt.target))
         .then(onSucces)
         .then(showSuccesModalMessage)
         .catch(showErrorModalMessage)
-        .finally(unBlockSubmitButton);
+        .finally(blockSubmitButton);
     }
   });
 };
